@@ -1,21 +1,72 @@
 package com.company;
 
 import java.util.Scanner;
+import static java.util.Arrays.sort;
+import java.util.*;
 
 public class Main {
 
+
+
+
     public static void FCFS(int[][] prosesler, int proses_sayisi){
 
-        System.out.println("Proses    Varis zamanı     Patlama zamanı");
+        double ort_bekleme = 0, ort_donus = 0;
+        int[] varis_zamanlari = new int[proses_sayisi]; //2 boyutlu prosesler arrayinin varış zamanlarını tutacak array.
+        int[] bekleme_zamanlari = new int[proses_sayisi]; //2 boyutlu prosesler arrayinin bekleme zamanlarını tutacak array.
+        int[] patlama_zamanlari = new int[proses_sayisi]; //2 boyutlu prosesler arrayinin patlama zamanlarını tutacak array.
+
+        int[] donus_zamanlari = new int[proses_sayisi]; //2 boyutlu prosesler arrayinin donus zamanlarını tutacak array.
+
+
+        Arrays.sort(prosesler, (b, a) -> Integer.compare(b[0], a[0])); // Varış zamanlarına göre diziyi sıralar.
+
+     /*   for (int i = 0; i< proses_sayisi; i++){
+            for (int j = 0; j<2; j++){
+                System.out.println(prosesler[i][j] + "   ");
+            }
+            System.out.println();
+        }*/
+
+
+        //Varış zamanlarını yeni arraye aktarma.
+        for (int i = 0; i<proses_sayisi; i++){
+            varis_zamanlari[i] = prosesler[i][0];
+        }
+
+        //Patlama zamanlarını yeni arraye aktarma.
+        for (int i = 0; i<proses_sayisi; i++){
+            patlama_zamanlari[i] = prosesler[i][1];
+        }
+
+        //Bekleme zamanlarının hesaplanması.
+        for (int i = 1; i< proses_sayisi; i++){
+            bekleme_zamanlari[i] = patlama_zamanlari[i-1] + bekleme_zamanlari[i-1];
+        }
+
+        //Donus zamanlarının hesaplanması.
+        for (int i = 0; i< proses_sayisi; i++){
+            donus_zamanlari[i] = patlama_zamanlari[i] + bekleme_zamanlari[i];
+        }
+
+        //Tablo halinde ekrana bastırma.
+        System.out.println("Proses    Varis zamanı     Patlama zamanı      Bekleme zamanı      Donus zamanı");
         for (int i = 0; i<proses_sayisi; i++){
             System.out.print((i+1) + "                ");
             for (int j = 0; j<2; j++){
-                System.out.print(prosesler[i][j] + "                    ");
+                System.out.print(prosesler[i][j] + "                ");
             }
+            System.out.print(bekleme_zamanlari[i] + "                 ");
+            System.out.print(donus_zamanlari[i] + "                  ");
+            ort_donus += donus_zamanlari[i]; // donus sürelerinin toplanması işlemi.
+            ort_bekleme += bekleme_zamanlari[i]; // bekleme sürelerinin toplanması işlemi.
             System.out.println();
         }
+        ort_bekleme = ort_bekleme/3; // Ortalama bekleme sürelerinin hesaplanması.
+        System.out.println("Ortalama Bekleme Süresi : " + ort_bekleme);
 
-        double ort_bekleme, ort_donus;
+        ort_donus = ort_donus/3; // Ortalama donus sürelerinin hesaplanması.
+        System.out.println("Ortalama Donus Süresi : " + ort_donus);
     }
 
     public static void SJP_NP(int[][] prosesler, int proses_sayisi){
@@ -24,18 +75,6 @@ public class Main {
 
     public static void SJP_P(int[][] prosesler, int proses_sayisi){
         //3
-        //Kontrol mekanizması için prosesleri ve verilerini ekrana bastırma. Kod en son düzenlenirken silinecek.
-  /*      for(int i = 0; i<proses_sayisi; i++){
-            System.out.println((i+1) + ". Prosesin");
-            for(int j = 0; j<2; j++){
-
-                if(j == 0){
-                    System.out.println("Varis zamani : " + prosesler[i][j]);
-                }else{
-                    System.out.println("patlama zamani : " + prosesler[i][j]);
-                }
-            }
-        }*/
     }
 
     public static void main(String[] args) {
